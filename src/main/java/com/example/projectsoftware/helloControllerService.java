@@ -1,6 +1,5 @@
 package com.example.projectsoftware;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,7 +10,7 @@ import javafx.scene.control.TextField;
 
 import java.sql.*;
 
-public class HelloControllerService {
+public class helloControllerService {
 
     @FXML
     private ListView<Services> servicelist;
@@ -36,8 +35,7 @@ public class HelloControllerService {
     private ObservableList<Services> fetchAllServices() {
         ObservableList<Services> services = FXCollections.observableArrayList();
 
-        String query = "SELECT serviceid, servicename, description, price, userid, location, image " +
-                "FROM software.services";
+        String query = "SELECT * FROM software.services";
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              Statement statement = connection.createStatement();
@@ -88,6 +86,7 @@ public class HelloControllerService {
 
     @FXML
     private CheckBox opencheck;
+
 
 
 
