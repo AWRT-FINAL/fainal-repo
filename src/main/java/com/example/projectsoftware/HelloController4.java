@@ -38,24 +38,20 @@ public class HelloController4 {
     private ImageView serviceimage;
 
     @FXML
-    private ChoiceBox<String> servicetime;
+    private ChoiceBox<String > servicetime;
 
     @FXML
     void cancleservice(javafx.event.ActionEvent event) {
-        System.out.println();
+
     }
 
     @FXML
     void clicktimeservicechoice(MouseEvent event) {
-        System.out.println();
-
 
     }
 
     @FXML
     void resser(ActionEvent event) {
-        System.out.println();
-
 
     }
 
@@ -64,7 +60,7 @@ public class HelloController4 {
         servicetime.getItems().addAll("16:00:00", "18:00:00", "20:00:00");
 
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "ak2932003");
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "1482003");
             checkReservationStatement = connection.prepareStatement("SELECT COUNT(*) FROM software.reservations WHERE date = ? AND starttime = ? AND serviceid = ?");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,21 +73,22 @@ public class HelloController4 {
 
                 if (item.isBefore(LocalDate.now())) {
                     setDisable(true);
-                    setStyle("-fx-background-color: #ffc0cb;"); // Past dates
+                    setStyle("-fx-background-color: #ffc0cb;");
                 } else {
                     setDisable(false);
                     int reservedCount = getReservedCount(item);
                     if (reservedCount == 3) {
-                        setStyle("-fx-background-color: #ff0000;"); // All times reserved
+                        setStyle("-fx-background-color: #ff0000;");
                         setOnMouseClicked(event -> showAlert("All time slots are reserved for this day."));
                     } else if (reservedCount > 0) {
-                        setStyle("-fx-background-color: #ffff00;"); // Some times reserved
+                        setStyle("-fx-background-color: #ffff00;");
                     } else {
-                        setStyle("-fx-background-color: #00ff00;"); // All times available
+                        setStyle("-fx-background-color: #00ff00;");
                     }
                 }
             }
         });
+
 
 
     }
@@ -99,27 +96,22 @@ public class HelloController4 {
     private int getReservedCount(LocalDate date) {
         int reservedCount = 0;
         try {
-            checkReservationStatement.clearBatch();
-
             for (String time : servicetime.getItems()) {
                 checkReservationStatement.setDate(1, Date.valueOf(date));
                 checkReservationStatement.setTime(2, Time.valueOf(time));
                 checkReservationStatement.setInt(3, getHallId());
-                checkReservationStatement.addBatch();
-            }
-
-            int[] results = checkReservationStatement.executeBatch();
-
-            for (int result : results) {
+                ResultSet resultSet = checkReservationStatement.executeQuery();
+                resultSet.next();
+                int count = resultSet.getInt(1);
+                if (count > 0) {
+                    reservedCount++;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return reservedCount;
-
     }
-
-
 
     private int getHallId() {
 
@@ -157,12 +149,12 @@ public class HelloController4 {
         List<String> availableTimes = new ArrayList<>();
 
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "ak2932003");
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "1482003");
 
             checkReservationStatement = connection.prepareStatement("SELECT DISTINCT starttime FROM software.reservations WHERE date = ? AND serviceid = ?");
 
             checkReservationStatement.setDate(1, Date.valueOf(selectedDate));
-            checkReservationStatement.setInt(2, getHallId()); // Hall ID is 2
+            checkReservationStatement.setInt(2, getHallId());
 
 
             ResultSet resultSet = checkReservationStatement.executeQuery();

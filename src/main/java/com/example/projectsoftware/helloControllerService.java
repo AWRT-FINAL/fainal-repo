@@ -22,7 +22,7 @@ public class helloControllerService {
 
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
     private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "ak2932003";
+    private static final String DB_PASSWORD = "1482003";
 
     @FXML
     public void initialize() {
