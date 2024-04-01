@@ -8,7 +8,7 @@ public class HelloController2 {
 
         String query = "SELECT email, password, role FROM software.users WHERE email = ? AND password = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "1482003");
+        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "ak2932003");
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, eemail);
@@ -79,7 +79,7 @@ public class HelloController2 {
         String query = "SELECT COUNT(*) FROM software.users WHERE userid= ?";
         boolean userid = false;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "1482003");
+        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "ak2932003");
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setInt(1, int1);
