@@ -111,7 +111,6 @@ public class ReservationInfo {
 
 
 
-    // Getters
 
 
     public int getUserId() {
@@ -130,7 +129,6 @@ public class ReservationInfo {
 
 
 
-    // Optional: Override toString() for debugging or logging purposes
     @Override
     public String toString() {
         return "ReservationInfo{" +

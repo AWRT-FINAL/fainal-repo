@@ -28,7 +28,6 @@ public class helloControllerService {
         allServices = fetchAllServices();
         servicelist.setItems(allServices);
 
-        // Listen for changes in the text field and perform search
         txt2.textProperty().addListener((observable, oldValue, newValue) -> searchServices(newValue));
     }
 
@@ -51,13 +50,12 @@ public class helloControllerService {
 
 
 
-                // You might need to handle image retrieval here if needed
 
                 Services service = new Services(serviceId, serviceName, description, price, userId, new byte[]{imagee});
                 services.add(service);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception based on your application's needs
+            e.printStackTrace();
         }
 
         return services;

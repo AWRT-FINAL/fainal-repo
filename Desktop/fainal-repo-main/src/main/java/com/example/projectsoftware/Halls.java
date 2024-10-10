@@ -1,5 +1,8 @@
 package com.example.projectsoftware;
 
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 
 import java.io.ByteArrayInputStream;
@@ -13,10 +16,9 @@ public  class Halls implements HallService {
         private String name;
         private double price;
         private int capacity;
-    private byte[] imageBytes; // Byte array to store image data
-    private String location; // Add location field
+    private byte[] imageBytes;
+    private String location;
 
-    // Constructor, getters, setters, and other methods remain unchanged
 
 
 
@@ -51,13 +53,12 @@ public  class Halls implements HallService {
         this.imageBytes = imageBytes;
     }
 
-    // Method to convert byte array to JavaFX Image
     public Image getImage() {
         if (imageBytes != null && imageBytes.length > 0) {
             String base64Image = Base64.getEncoder().encodeToString(imageBytes);
             return new Image(new ByteArrayInputStream(Base64.getDecoder().decode(base64Image)));
         }
-        return null; // Return null if imageBytes is empty
+        return null;
     }
         public String getName() {
             return name;
@@ -72,8 +73,7 @@ public  class Halls implements HallService {
         }
         @Override
         public String toString() {
-            return name; // Return the name of the hall for display in ListView
-        }
+            return name;}
         public static boolean isHallExists(String hallName) {
             String query = "SELECT COUNT(*) FROM software.Halls WHERE hallname = ?";
             boolean hallExists = false;
@@ -90,7 +90,7 @@ public  class Halls implements HallService {
                     }
                 }
             } catch (SQLException e) {
-                e.printStackTrace(); // Handle the exception based on your application's needs
+                e.printStackTrace();
             }
 
             return hallExists;

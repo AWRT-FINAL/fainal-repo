@@ -11,10 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.sql.*;
-
-
 public class HelloController3 {
 
     @FXML
@@ -53,7 +52,6 @@ public class HelloController3 {
 
         allpackage = fetchpackage();
         packageList.setItems(allpackage);
-       // packageList.setVisible(false);
         txt3.textProperty().addListener((observable, oldValue, newValue) -> searchpackages(newValue));
         packageList.setOnMouseClicked(this::ssshowHallInformationDialog);
 
@@ -84,7 +82,6 @@ public class HelloController3 {
 
                     loader.setLocation(getClass().getResource("newhall.fxml"));
                     root = loader.load();
-                    // Populate textfields and image label with information from selected hall
                     HelloController controller = loader.getController();
                     controller.populateFields(selectedHall);
 
@@ -101,7 +98,7 @@ public class HelloController3 {
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
-                e.printStackTrace(); // Log the exception or provide user feedback
+                e.printStackTrace();
             }
         }
     }
@@ -126,7 +123,7 @@ public class HelloController3 {
                 halls.add(hall);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception based on your application's needs
+            e.printStackTrace();
         }
 
         return halls;
@@ -135,7 +132,6 @@ public class HelloController3 {
     private void filterHalls(String query) {
         ObservableList<Halls> filteredHalls = FXCollections.observableArrayList();
 
-        // Filter based on the query (you can customize the filtering logic)
         for (Halls hall : allHalls) {
             if (hall.getName().toLowerCase().contains(query.toLowerCase()) ||
                     (isNumeric(query) && (String.valueOf(hall.getPrice()).equals(query) || String.valueOf(hall.getCapacity()).equals(query)))) {
@@ -143,7 +139,6 @@ public class HelloController3 {
             }
         }
 
-        // Update the hallListView with filtered data
         hallListView.setItems(filteredHalls);
         hallListView.setVisible(!query.isEmpty());
     }
@@ -168,7 +163,6 @@ public class HelloController3 {
 
 
 
-    // Method to display alerts/messages
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -177,7 +171,6 @@ public class HelloController3 {
         alert.showAndWait();
     }
 
-    // Method to convert byte array to javafx.scene.image.Image
 
     @FXML
     private Button cancclllee;
@@ -254,13 +247,12 @@ public class HelloController3 {
 
 
 
-                // You might need to handle image retrieval here if needed
 
                 Services service = new Services(serviceId, serviceName, description, price, userId, new byte[]{imagee});
                 services.add(service);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception based on your application's needs
+            e.printStackTrace();
         }
 
         return services;
@@ -272,7 +264,6 @@ public class HelloController3 {
         ObservableList<Services> filteredServices = FXCollections.observableArrayList();
 
         for (Services service : allServices) {
-            // Convert the price to String for comparison
             String priceString = String.valueOf(service.getPrice());
             if (service.getServiceName().toLowerCase().contains(query.toLowerCase()) ||
                     priceString.equals(query))
@@ -326,7 +317,6 @@ public class HelloController3 {
 
                     loader.setLocation(getClass().getResource("servicepageee.fxml"));
                     root = loader.load();
-                    // Populate textfields and image label with information from selected hall
                    HelloController controller = loader.getController();
                     controller.populateFieldss(selectedHall);
 
@@ -343,7 +333,7 @@ public class HelloController3 {
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
-                e.printStackTrace(); // Log the exception or provide user feedback
+                e.printStackTrace();
             }
         }
     }
@@ -377,13 +367,12 @@ public class HelloController3 {
 
 
 
-                // You might need to handle image retrieval here if needed
 
                 packge service = new packge(serviceId, serviceName, description, price, userId, new String[]{imagee});
                 services.add(service);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception based on your application's needs
+            e.printStackTrace();
         }
 
         return services;
@@ -395,7 +384,6 @@ public class HelloController3 {
         ObservableList<packge> filteredServices = FXCollections.observableArrayList();
 
         for (packge service : allpackage) {
-            // Convert the price to String for comparison
             String priceString = String.valueOf(service.getPrice());
             if (service.getPackageName().toLowerCase().contains(query.toLowerCase()) ||
                     priceString.equals(query))
@@ -412,40 +400,20 @@ public class HelloController3 {
     private void ssshowHallInformationDialog(MouseEvent event) {
         packge selectedHall = packageList.getSelectionModel().getSelectedItem();
         if (selectedHall != null) {
-            String hallName = selectedHall.getPackageName();
             try {
                 FXMLLoader loader = new FXMLLoader();
                 Parent root;
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-                if ("Dj".equals(hallName)) {
-                    loader.setLocation(getClass().getResource("packagepage.fxml"));
-                    root = loader.load();
-                    HelloController controller = loader.getController();
-                    controller.populateFieldsss(selectedHall);
-
-                }  else {
-
-                    loader.setLocation(getClass().getResource("packagepage.fxml"));
-                    root = loader.load();
-                    // Populate textfields and image label with information from selected hall
-                    HelloController controller = loader.getController();
-                    controller.populateFieldsss(selectedHall);
-
-                }
-
-
-                HelloController controller = new HelloController();
-                controller=loader.getController();
+                loader.setLocation(getClass().getResource("packagepage.fxml"));
+                root = loader.load();
+                HelloController controller = loader.getController();
+                controller.populateFieldsss(selectedHall);
                 controller.performInitialization();
-
-
-
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
-                e.printStackTrace(); // Log the exception or provide user feedback
+                e.printStackTrace();
             }
         }
     }

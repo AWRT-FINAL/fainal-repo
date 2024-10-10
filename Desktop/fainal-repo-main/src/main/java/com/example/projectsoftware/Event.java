@@ -17,7 +17,6 @@ public class Event {
     private LocalDate date;
 
 
-    // Constructor
     public Event(int eventId, String eventName, Date eventDate, String location, String description, int organizerId, Timestamp creationDate, byte[] image, int hallId) {
         this.eventId = eventId;
         this.eventName = eventName;
@@ -56,7 +55,6 @@ public class Event {
         this.hallId = hallId;
     }
 
-    // Getters
     public int getEventId() {
         return eventId;
     }

@@ -40,6 +40,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -76,8 +77,12 @@ import javafx.embed.swing.SwingFXUtils;
 public class HelloController  {
 
     static Logger logger = Logger.getLogger(com.example.projectsoftware.HelloController.class.getName());
-    private static final String ACTION_1 = "An error occurred while opening a new window:";
-    private static final String Capacity = "capacity";
+static String WINDOW=" An error occurred while opening a new window:";
+    private static final String helloview = "hello-view.fxml";
+    private static final String cust = "custointer.fxml";
+    private static final String serpage = "serviceproviderpage.fxml";
+    private static final String halll =     "Halls.fxml";
+
 
 
     @FXML
@@ -135,11 +140,11 @@ public class HelloController  {
 
                 switch (role) {
                     case "customer":
-                        loadInterface("custointer.fxml", event);
+                        loadInterface(cust, event);
 
                         break;
                     case "service-provider":
-                        loadInterface("serviceproviderpage.fxml", event);
+                        loadInterface(serpage, event);
                         break;
                     case "admin":
                         loadInterface("Adminlogin.fxml", event);
@@ -179,7 +184,7 @@ public class HelloController  {
 
 
         } catch (IOException e) {
-            logger.log(null, ACTION_1);
+            logger.log(null, WINDOW);
         }
     }
 
@@ -188,7 +193,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("Halls.fxml"));
+            root = FXMLLoader.load(getClass().getResource(halll));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -274,10 +279,12 @@ public class HelloController  {
             frame.getContentPane().add(new JRViewer(jp));
             frame.pack();
             frame.setVisible(true);
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.toString());
 
         }
+
     }
 
     @FXML
@@ -321,7 +328,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+            root = FXMLLoader.load(getClass().getResource(helloview));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -339,7 +346,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+            root = FXMLLoader.load(getClass().getResource(helloview));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -360,7 +367,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("Halls.fxml"));
+            root = FXMLLoader.load(getClass().getResource(halll));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -474,13 +481,15 @@ public class HelloController  {
 
     @FXML
     void choicesnew(MouseEvent event) {
-        System.out.println("this is trial button");
 
     }
 
 
     @FXML
     private void select(ActionEvent event) {
+
+
+
 
         String query = "SELECT capacity, location, priceperhour FROM software.halls WHERE hallname = 'Rose'";
 
@@ -489,7 +498,7 @@ public class HelloController  {
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             if (resultSet.next()) {
-                int capacity = resultSet.getInt(Capacity);
+                int capacity = resultSet.getInt("capacity");
                 String location = resultSet.getString("location");
                 double price = resultSet.getDouble("priceperhour");
 
@@ -545,10 +554,10 @@ public class HelloController  {
                 return;
             }
 
+
             BigDecimal pricePerHour = getPricePerHour(hallId, connection);
 
             BigDecimal totalPrice = pricePerHour.multiply(BigDecimal.valueOf(durationHours));
-
             insertReservation(userId, hallId, selectedDate, startTime, endTime, totalPrice, connection);
 
             showAlert("Wait owner to accept your reservation.");
@@ -560,15 +569,24 @@ public class HelloController  {
 
     private int gettHallId(String hallName, Connection connection) {
         int hallId = 0;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT hallid FROM software.halls WHERE hallname = ?");
+            statement = connection.prepareStatement("SELECT hallid FROM software.halls WHERE hallname = ?");
             statement.setString(1, hallName);
-            ResultSet resultSet = statement.executeQuery();
+            resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 hallId = resultSet.getInt("hallid");
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return hallId;
     }
@@ -723,7 +741,7 @@ public class HelloController  {
 
 
         } catch (IOException e) {
-            logger.log(null,ACTION_1);
+            logger.log(null,WINDOW);
         }
     }
 
@@ -767,6 +785,7 @@ public class HelloController  {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
+
                 newpass.setDisable(false);
                 vernewpass.setDisable(false);
                 reset.setDisable(false);
@@ -792,7 +811,6 @@ public class HelloController  {
         }
 
         String email = emmmail.getText();
-
 
         String updateQuery = "UPDATE software.users SET password = ? WHERE email = ?";
 
@@ -845,7 +863,6 @@ public class HelloController  {
 
         hallPercentage = 0;
         servicePercentage = 0;
-
         budgetTextField.clear();
     }
 
@@ -1007,7 +1024,7 @@ public class HelloController  {
 
 
         } catch (IOException e) {
-            logger.log(null, ACTION_1);
+            logger.log(null,WINDOW);
         }
 
     }
@@ -1026,7 +1043,7 @@ public class HelloController  {
             stage.show();
         } catch (IOException e) {
             System.out.println("11");
-            logger.log(Level.SEVERE, ACTION_1, e);
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
     }
 
@@ -1039,7 +1056,7 @@ public class HelloController  {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, ACTION_1, e);
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
 
 
@@ -1054,7 +1071,7 @@ public class HelloController  {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, ACTION_1, e);
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
 
     }
@@ -1064,7 +1081,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+            root = FXMLLoader.load(getClass().getResource(helloview));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -1088,7 +1105,7 @@ public class HelloController  {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, ACTION_1, e);
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
 
     }
@@ -1113,11 +1130,10 @@ public class HelloController  {
 
     @FXML
     private TableColumn<Hall, String> locationnn;
-
     @FXML
     private TableColumn<Hall, Double> priceperhourr;
-    @FXML
     private TableColumn<Hall, Integer> USERID;
+
 
 
     @FXML
@@ -1132,8 +1148,7 @@ public class HelloController  {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-
-            logger.log(Level.SEVERE, ACTION_1, e);
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
 
 
@@ -1143,7 +1158,7 @@ public class HelloController  {
     void deletehalls(ActionEvent event) {
         hallidd.setCellValueFactory(new PropertyValueFactory<>("hallId"));
         hallnamee.setCellValueFactory(new PropertyValueFactory<>("hallName"));
-        capacityyy.setCellValueFactory(new PropertyValueFactory<>(Capacity));
+        capacityyy.setCellValueFactory(new PropertyValueFactory<>("capacity"));
         priceperhourr.setCellValueFactory(new PropertyValueFactory<>("pricePerHour"));
         locationnn.setCellValueFactory(new PropertyValueFactory<>("location"));
         USERID.setCellValueFactory(new PropertyValueFactory<>("userId"));
@@ -1175,33 +1190,31 @@ public class HelloController  {
             System.err.println("hallTableView is not initialized!");
             return;
         }
-
         hallidd.setCellValueFactory(new PropertyValueFactory<>("hallId"));
         hallnamee.setCellValueFactory(new PropertyValueFactory<>("hallName"));
-        capacityyy.setCellValueFactory(new PropertyValueFactory<>(Capacity));
+        capacityyy.setCellValueFactory(new PropertyValueFactory<>("capacity"));
         priceperhourr.setCellValueFactory(new PropertyValueFactory<>("pricePerHour"));
         locationnn.setCellValueFactory(new PropertyValueFactory<>("location"));
         USERID.setCellValueFactory(new PropertyValueFactory<>("userId"));
         hallTableView.getItems().clear();
-
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String sql = "SELECT * FROM software.halls";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
-
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            statement = conn.prepareStatement("SELECT * FROM software.halls");
+            resultSet = statement.executeQuery();
             ObservableList<Hall> halls = FXCollections.observableArrayList();
             while (resultSet.next()) {
                 int hallId = resultSet.getInt("hallid");
                 String hallName = resultSet.getString("hallname");
-                int capacity = resultSet.getInt(Capacity);
+                int capacity = resultSet.getInt("capacity");
                 double pricePerHour = resultSet.getDouble("priceperhour");
                 String location = resultSet.getString("location");
                 int userId = resultSet.getInt("userid");
-
                 Hall hall = new Hall(hallId, hallName, capacity, pricePerHour, location, userId);
                 halls.add(hall);
             }
-
             for (Hall hall : halls) {
                 System.out.println("Hall ID: " + hall.getHallId());
                 System.out.println("Hall Name: " + hall.getHallName());
@@ -1211,17 +1224,19 @@ public class HelloController  {
                 System.out.println("User ID: " + hall.getUserId());
                 System.out.println("---------------------------------");
             }
-
             hallTableView.setItems(halls);
-
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-
-
     @FXML
     private Button editadmin;
 
@@ -1256,6 +1271,7 @@ public class HelloController  {
     void editadmininfo(ActionEvent event) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String sql = "UPDATE software.users SET firstname=?, lastname=?, username=?, password=?, email=?, code=? WHERE userid=?";
+
 
             PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -1550,7 +1566,7 @@ public class HelloController  {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, ACTION_1, e);
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
 
     }
@@ -1619,7 +1635,9 @@ public class HelloController  {
 
         tableeee.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1) {
+
                 packge selectedPackage = tableeee.getSelectionModel().getSelectedItem();
+
 
                 if (selectedPackage != null) {
                     pid.setText(String.valueOf(selectedPackage.getPackageId()));
@@ -1627,6 +1645,7 @@ public class HelloController  {
                     des.setText(selectedPackage.getDescription());
                     price.setText(String.valueOf(selectedPackage.getPrice()));
                     mguest.setText(String.valueOf(selectedPackage.getMaxGuests()));
+
                     innc.setText(String.join(",", selectedPackage.getIncludes()));
                 }
             }
@@ -1795,6 +1814,7 @@ public class HelloController  {
         return hallId;
     }
     private int getHallIdd() {
+
         String hallName = mn1.getText();
         int hallId = 0;
         try {
@@ -1863,7 +1883,7 @@ public class HelloController  {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, ACTION_1, e);
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
 
         }
     }
@@ -1942,6 +1962,7 @@ public class HelloController  {
                         cc8.setCellValueFactory(new PropertyValueFactory<>("state"));
 
                         ArrayList<new_reservation> items = new ArrayList<>(tabelnotification.getItems());
+
                         tabelnotification.getItems().clear();
                         tabelnotification.getItems().addAll(reservations);
                     }
@@ -2192,6 +2213,7 @@ public class HelloController  {
                         String insertQuery = "INSERT INTO software.reservations (reservationid, userid, hallid, date, starttime, endtime, totalprice, serviceid, state) " +
                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         try (PreparedStatement insertStatement = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+
                             int userId = getUserIdFromUserName(selectedReservation.getUserName(), conn);
 
                             int hallId = getHallIdFromHallName(selectedReservation.getHallName(), conn);
@@ -2274,8 +2296,6 @@ public class HelloController  {
         newcapacity.setText(String.valueOf(selectedHall.getCapacity()));
         newprice.setText(String.valueOf(selectedHall.getPrice()));
         newlocation.setText(selectedHall.getLocation());
-
-
         Image imageData = selectedHall.getImage();
         hallImageView.setImage(imageData);
     }
@@ -2318,8 +2338,6 @@ public class HelloController  {
         lb7.setText(String.valueOf(selectedHall.getPrice()));
         lb8.setText(String.valueOf(selectedHall.getDescription()));
         lb9.setText(String.valueOf(selectedHall.getServiceName()));
-
-
 
         Image imageData = selectedHall.getImage();
         serviceimage.setImage(imageData);
@@ -2402,8 +2420,6 @@ public class HelloController  {
         LocalTime startTime = LocalTime.parse(startTimeStr);
 
         LocalTime endTime = startTime.plusHours(2);
-
-
 
         long durationHours = 2;
 
@@ -2529,7 +2545,6 @@ public class HelloController  {
     void resser(ActionEvent event) {
         LocalDate selectedDate = datereservation.getValue();
         String startTimeStr = servicetime.getValue();
-
         if (selectedDate == null || startTimeStr == null) {
             showAlert("Please select date and start time.");
             return;
@@ -2543,8 +2558,6 @@ public class HelloController  {
         LocalTime startTime = LocalTime.parse(startTimeStr);
 
         LocalTime endTime = startTime.plusHours(2);
-
-
 
         long durationHours = 2;
 
@@ -2654,12 +2667,12 @@ public class HelloController  {
 
     private ObservableList<new_reservation> reservationsData = FXCollections.observableArrayList();
 
-
     @FXML
     void soso(KeyEvent event) {
         String searchText = jtxt1.getText().toLowerCase();
 
         ObservableList<new_reservation> filteredList = FXCollections.observableArrayList();
+
 
         for (new_reservation reservation : tabelnotification.getItems()) {
             if (String.valueOf(reservation.getHallId()).toLowerCase().contains(searchText) ||
@@ -2685,7 +2698,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+            root = FXMLLoader.load(getClass().getResource(helloview));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -2704,7 +2717,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("Halls.fxml"));
+            root = FXMLLoader.load(getClass().getResource(halll));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -2725,7 +2738,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+            root = FXMLLoader.load(getClass().getResource(helloview));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -2756,6 +2769,7 @@ public class HelloController  {
 
     @FXML
     void buttonview(ActionEvent event) {
+
         if (feedbacktable == null) {
             System.err.println("feedbackTable is not initialized!");
             return;
@@ -2781,12 +2795,12 @@ public class HelloController  {
                     feedbackList.add(feedbackEntry);
                 }
             }
-
             for (FeedbackEntry entry : feedbackList) {
                 System.out.println("User ID: " + entry.getUserId());
                 System.out.println("Feedback: " + entry.getFeedback());
                 System.out.println("---------------------------------");
             }
+
 
             feedbacktable.setItems(feedbackList);
 
@@ -2830,7 +2844,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("custointer.fxml"));
+            root = FXMLLoader.load(getClass().getResource(cust));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -2847,8 +2861,8 @@ public class HelloController  {
     @FXML
     void sendclick(ActionEvent event) {
         String feedback = textareaaa.getText();
-
         try {
+
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
                 int userId = getUserId(UserCredentials.getEmail(), UserCredentials.getPassword(), conn);
                 String query = "INSERT INTO software.new_table_name (userid, feedback) VALUES (?, ?)";
@@ -2895,7 +2909,7 @@ public class HelloController  {
 
 
         } catch (IOException e) {
-            logger.log(null, " An error occurred while opening a new window:");
+            logger.log(null, WINDOW);
         }
     }
 
@@ -2921,6 +2935,7 @@ public class HelloController  {
     void viewsertable(ActionEvent event) {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+
             int userId = getUserIdd(UserCredentials.getEmail(), UserCredentials.getPassword(), connection);
             ObservableList<Services> servicesList = FXCollections.observableArrayList();
             String servicesQuery = "SELECT * FROM software.services WHERE userid = ?";
@@ -2963,7 +2978,7 @@ public class HelloController  {
                 ResultSet hallsResultSet = hallsStatement.executeQuery();
                 while (hallsResultSet.next()) {
                     Services hall;
-                    int capacity = hallsResultSet.getInt(Capacity);
+                    int capacity = hallsResultSet.getInt("capacity");
                     hall = new Services(
                             hallsResultSet.getInt("hallid"),
                             hallsResultSet.getString("hallname"),
@@ -2995,8 +3010,8 @@ public class HelloController  {
 
     @FXML
     void handleRowSelect(MouseEvent event) {
-        int selectedIndex = serviceviewtable.getSelectionModel().getSelectedIndex();
 
+        int selectedIndex = serviceviewtable.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
             Object value2 = colm2.getCellData(selectedIndex);
             Object value3 = colm3.getCellData(selectedIndex);
@@ -3051,12 +3066,12 @@ public class HelloController  {
     @FXML
     void addserr(ActionEvent event) {
         String description = serdes.getText();
-
         if (description.equalsIgnoreCase("hall")) {
             saveToHallsTable();
         } else if (description.equalsIgnoreCase("service")) {
             saveToServicesTable();
         } else {
+         showAlert("Handle invalid description");
         }
 
     }
@@ -3085,6 +3100,7 @@ public class HelloController  {
                 statement.close();
             } catch (SQLException e) {
                 showAlert("enter image for service please");
+
             }
         });
 
@@ -3106,6 +3122,7 @@ public class HelloController  {
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+
         }
     }
 
@@ -3142,7 +3159,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("serviceproviderpage.fxml"));
+            root = FXMLLoader.load(getClass().getResource(serpage));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -3151,7 +3168,7 @@ public class HelloController  {
 
 
         } catch (IOException e) {
-            logger.log(null, " An error occurred while opening a new window:");
+            logger.log(null,WINDOW);
         }
 
     }
@@ -3162,6 +3179,7 @@ public class HelloController  {
 
     @FXML
     void uploadserp(ActionEvent event) {
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Image File");
 
@@ -3241,7 +3259,7 @@ public class HelloController  {
 
 
         } catch (IOException e) {
-            logger.log(null, " An error occurred while opening a new window:");
+            logger.log(null,WINDOW);
         }
 
     }
@@ -3305,7 +3323,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("serviceproviderpage.fxml"));
+            root = FXMLLoader.load(getClass().getResource(serpage));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -3314,7 +3332,7 @@ public class HelloController  {
 
 
         } catch (IOException e) {
-            logger.log(null, " An error occurred while opening a new window:");
+            logger.log(null, WINDOW);
         }
 
 
@@ -3334,7 +3352,7 @@ public class HelloController  {
 
 
         } catch (IOException e) {
-            logger.log(null, " An error occurred while opening a new window:");
+            logger.log(null, WINDOW);
         }
 
 
@@ -3385,7 +3403,6 @@ public class HelloController  {
                     e8.setCellValueFactory(new PropertyValueFactory<>("serviceId"));
                     e9.setCellValueFactory(new PropertyValueFactory<>("state"));
 
-
                     eventtable.getItems().clear();
 
                     eventtable.getItems().addAll(reservationsList);
@@ -3417,7 +3434,7 @@ public class HelloController  {
 
 
         } catch (IOException e) {
-            logger.log(null, " An error occurred while opening a new window:");
+            logger.log(null,WINDOW);
         }
 
     }
@@ -3441,7 +3458,8 @@ public class HelloController  {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, ACTION_1, e);
+
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
 
 
@@ -3459,7 +3477,8 @@ public class HelloController  {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, ACTION_1, e);
+
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
 
 
@@ -3591,13 +3610,13 @@ public class HelloController  {
     @FXML
     void backreport(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("serviceproviderpage.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource(serpage));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, ACTION_1, e);
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
 
 
@@ -3615,7 +3634,8 @@ public class HelloController  {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, ACTION_1, e);
+
+            logger.log(Level.SEVERE, "An error occurred while opening a new window:", e);
         }
 
     }
@@ -3632,6 +3652,7 @@ public class HelloController  {
             int userId = getUserId(UserCredentials.getEmail(), UserCredentials.getPassword(), conn);
 
             if (userId != -1) {
+
                 String sql = "SELECT h.hallname, h.priceperhour, COUNT(r.reservationid) AS num_reservations, SUM(r.totalprice) AS total_price " +
                         "FROM software.halls h " +
                         "LEFT JOIN software.reservations r ON h.hallid = r.hallid " +
@@ -3667,10 +3688,12 @@ public class HelloController  {
     }
 
     private void populateServiceReport() {
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             int userId = getUserId(UserCredentials.getEmail(), UserCredentials.getPassword(), conn);
 
             if (userId != -1) {
+
                 String sql = "SELECT s.servicename, s.price, COUNT(r.reservationid) AS num_reservations, SUM(r.totalprice) AS total_price " +
                         "FROM software.services s " +
                         "LEFT JOIN software.reservations r ON s.serviceid = r.serviceid " +
@@ -3729,6 +3752,7 @@ public class HelloController  {
             int year = Integer.parseInt(parts[0]);
             int month = Integer.parseInt(parts[1]);
 
+
             try (Connection conn = getConnection()) {
                 int userId = getUserId(UserCredentials.getEmail(), UserCredentials.getPassword(), conn);
 
@@ -3770,6 +3794,7 @@ public class HelloController  {
                 servicesStmt.close();
                 servicesRs.close();
 
+
                 double totalPrice = hallsTotalPrice + servicesTotalPrice;
                 reportlabel.setText("" + totalPrice);
             }
@@ -3786,7 +3811,7 @@ public class HelloController  {
         try {
             Parent root;
 
-            root = FXMLLoader.load(getClass().getResource("custointer.fxml"));
+            root = FXMLLoader.load(getClass().getResource(cust));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene;
             scene = new Scene(root);
@@ -3839,6 +3864,7 @@ public class HelloController  {
 
     @FXML
     void uploadimageevents(ActionEvent event) {
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Image");
         selectedFile = fileChooser.showOpenDialog(x1.getScene().getWindow());
@@ -3859,6 +3885,7 @@ public class HelloController  {
     @FXML
     void populateHallChoiceBox() {
         try (Connection conn = getConnection()) {
+
             r8.getItems().clear();
 
             String sql = "SELECT hallid, hallname FROM software.halls WHERE userid = ?";
@@ -3888,6 +3915,7 @@ public class HelloController  {
 
         } catch (SQLException e) {
             e.printStackTrace();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -3896,15 +3924,18 @@ public class HelloController  {
 
     @FXML
     void saveevents(ActionEvent event) {
+
         String eventName = r1.getText();
         String eventLocation = r3.getText();
         String eventDescription = r4.getText();
 
         String selectedHall = r8.getValue();
         if (selectedHall != null) {
+
             int hallId = Integer.parseInt(selectedHall.split("-")[0]);
 
             try (Connection conn = getConnection()) {
+
                 String eventSql = "INSERT INTO software.events (event_name, event_date, description, location, hallid, organizer_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
                 String reservationSql = "INSERT INTO software.reservations (userid, hallid, date, starttime, endtime, totalprice, state, eventsid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -3919,6 +3950,7 @@ public class HelloController  {
                 eventStatement.setString(4, eventLocation);
                 eventStatement.setInt(5, hallId);
                 eventStatement.setInt(6, userId);
+
                 byte[] imageData = imageToByteArray(eventsimage.getImage());
                 eventStatement.setBytes(7, imageData);
 
@@ -3931,6 +3963,7 @@ public class HelloController  {
                 }
 
                 if (eventRowsInserted > 0 && eventId != 0) {
+
                     reservationStatement.setInt(1, userId);
                     reservationStatement.setInt(2, hallId);
                     reservationStatement.setDate(3, Date.valueOf(r2.getText()));
@@ -3943,15 +3976,18 @@ public class HelloController  {
                     int reservationRowsInserted = reservationStatement.executeUpdate();
                     if (reservationRowsInserted > 0) {
                         showAlert("Reservation saved successfully!");
+
                     }
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else {
             showAlert("Please select a hall.");
+
         }
     }
 
@@ -3961,6 +3997,7 @@ public class HelloController  {
     }
 
     private void showTicketDialog() {
+
         TextField ticketTypeField = new TextField();
         TextField priceField = new TextField();
         TextField availableQuantityField = new TextField();
@@ -4001,19 +4038,23 @@ public class HelloController  {
     private void saveTicketToDatabase(String ticketType, String price, String availableQuantity, LocalDate startDate, LocalDate endDate, String eventId) {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+
             String sql = "INSERT INTO software.tickets (ticket_type, price, available_quantity, start_date, end_date, event_name) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
                 statement.setString(1, ticketType);
                 statement.setBigDecimal(2, new BigDecimal(price));
                 statement.setInt(3, Integer.parseInt(availableQuantity));
                 statement.setDate(4, Date.valueOf(startDate));
                 statement.setDate(5, Date.valueOf(endDate));
                 statement.setString(6, eventId);
+
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
+
         }
     }
 
@@ -4023,6 +4064,7 @@ public class HelloController  {
     public void start(Stage primaryStage) {
         try {
             primaryStage.setTitle("Ticket Management");
+
 
             Button addButton = new Button("Add Ticket");
             addButton.setOnAction(this::cancleevents);
@@ -4106,7 +4148,9 @@ public class HelloController  {
                             String description = resultSet.getString("description");
                             int organizerId = resultSet.getInt("organizer_id");
                             Timestamp creationDate = resultSet.getTimestamp("creation_date");
+
                             int hallId = resultSet.getInt("hallid");
+
 
                             reservations.add(new Event(eventId, eventName, eventDate, location, description, organizerId, creationDate, hallId));
 
@@ -4118,10 +4162,13 @@ public class HelloController  {
                         eventsdate.setCellValueFactory(new PropertyValueFactory<>("eventDate"));
                         eventorgid.setCellValueFactory(new PropertyValueFactory<>("organizerId"));
                         creationdate.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+
                         eventhallid.setCellValueFactory(new PropertyValueFactory<>("hallId"));
 
 
+
                         eventsviewtable.getItems().clear();
+
 
                         eventsviewtable.getItems().addAll(reservations);
                     }
@@ -4379,6 +4426,7 @@ public class HelloController  {
                 int maxGuests = resultSet.getInt("max_guests");
                 String includes = resultSet.getString("includes");
 
+
                 String[] includesArray = includes.split(",");
 
                 data.add(new packge(packageId, packageName, description, price, maxGuests, includesArray));
@@ -4426,25 +4474,22 @@ public class HelloController  {
 
     @FXML
     void getppadd(ActionEvent event) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
-            Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
+            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
             String query = "INSERT INTO software.wedding_packages (package_id, package_name, description, price, max_guests, includes) VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-
+            preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, Integer.parseInt(ppid.getText()));
             preparedStatement.setString(2, ppname.getText());
             preparedStatement.setString(3, ppdesc.getText());
             preparedStatement.setDouble(4, Double.parseDouble(ppprice.getText()));
             preparedStatement.setInt(5, Integer.parseInt(ppmax.getText()));
-
             String[] includesArray = ppincludes.getText().split(",");
             Array array = connection.createArrayOf("text", includesArray);
             preparedStatement.setArray(6, array);
-
             int rowsInserted = preparedStatement.executeUpdate();
             showAlert("package added successfully");
-
             if (rowsInserted > 0) {
                 ppid.clear();
                 ppname.clear();
@@ -4453,13 +4498,16 @@ public class HelloController  {
                 ppmax.clear();
                 ppincludes.clear();
             }
-
-            preparedStatement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-}
-
+        } finally {
+            try {
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
 

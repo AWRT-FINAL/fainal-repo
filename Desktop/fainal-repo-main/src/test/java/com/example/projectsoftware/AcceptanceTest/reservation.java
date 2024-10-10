@@ -24,7 +24,6 @@ public class reservation {
         selectedStartTime = string2;
         selectedEndTime = string3;
 
-        // Check if the selected time is available
         reservationAvailable = DateTimeUtil.isTimeAvailable(string, string2, string3);
     }
     @Then("the system should confirm the reservation successfully")

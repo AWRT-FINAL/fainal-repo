@@ -32,7 +32,6 @@ public class editing {
 
     @When("the user clicks on the {string} button")
     public void theUserClicksOnTheButton(String string) {
-        // Write code here that turns the phrase above into concrete actions
        System.out.println("rtye");
     }
 
